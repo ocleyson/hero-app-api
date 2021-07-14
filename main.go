@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"net/http"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	err := http.ListenAndServe(":3000", Routes())
+
+	if err != nil {
+		panic("Failed to serve api.")
+	}
 }
