@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/ocleyson/hero-app-api/models"
 	"github.com/ocleyson/hero-app-api/types"
 	"github.com/ocleyson/hero-app-api/utils"
 )
@@ -14,6 +15,10 @@ func SearchHeroByName(res http.ResponseWriter, req *http.Request) {
 	name := mux.Vars(req)["name"]
 
 	var searchHeroRes types.SearchHeroesRes
+
+	var heroes []models.Hero
+
+	var hero models.Hero
 
 	SUPER_HERO_API_KEY := utils.GetEnvVar("SUPER_HERO_API_KEY")
 
@@ -35,5 +40,20 @@ func SearchHeroByName(res http.ResponseWriter, req *http.Request) {
 
 	json.Unmarshal(reqBody, &searchHeroRes)
 
-	json.NewEncoder(res).Encode(searchHeroRes)
+	for i := 0; i < len(searchHeroRes.Results); i++ {
+		hero.Id = searchHeroRes.Results[i].Id
+		hero.Name = searchHeroRes.Results[i].Name
+		hero.FullName = searchHeroRes.Results[i].Biography.FullName
+		hero.Intelligence = searchHeroRes.Results[i].Powerstats.Intelligence
+		hero.Power = searchHeroRes.Results[i].Powerstats.Power
+		hero.Occupation = searchHeroRes.Results[i].Work.Occupation
+		hero.ImageUrl = searchHeroRes.Results[i].Image.Url
+		hero.GroupAffiliation = searchHeroRes.Results[i].Connections.GroupAffiliation
+		hero.Relatives = searchHeroRes.Results[i].Connections.Relatives
+		hero.Alignment = searchHeroRes.Results[i].Biography.Alignment
+
+		heroes = append(heroes, hero)
+	}
+
+	json.NewEncoder(res).Encode(heroes)
 }
