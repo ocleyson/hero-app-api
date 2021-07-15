@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/ocleyson/hero-app-api/models"
+	"github.com/ocleyson/hero-app-api/services"
 	"github.com/ocleyson/hero-app-api/types"
 	"github.com/ocleyson/hero-app-api/utils"
 )
@@ -56,4 +57,21 @@ func SearchHeroByName(res http.ResponseWriter, req *http.Request) {
 	}
 
 	json.NewEncoder(res).Encode(heroes)
+}
+
+func StoreHero(res http.ResponseWriter, req *http.Request) {
+	reqBody, _ := ioutil.ReadAll(req.Body)
+
+	var hero models.Hero
+
+	json.Unmarshal(reqBody, &hero)
+
+	result := services.DB.Create(&hero)
+
+	if result.Error != nil {
+		http.Error(res, result.Error.Error(), http.StatusBadRequest)
+		return
+	}
+
+	json.NewEncoder(res).Encode(hero)
 }
