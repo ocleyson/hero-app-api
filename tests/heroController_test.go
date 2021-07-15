@@ -98,3 +98,21 @@ func TestIndexGoodHeroes(t *testing.T) {
 
 	shutdown()
 }
+
+func TestIndexBadHeroes(t *testing.T) {
+	setup()
+
+	req, err := http.NewRequest("GET", "/heroes/bads", nil)
+
+	res := httptest.NewRecorder()
+
+	if err != nil {
+		t.Fatalf(`get all stored bad heroes: %q`, err)
+	}
+
+	routes.Routes().ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusOK, res.Code, "it should get all stored bad heroes")
+
+	shutdown()
+}
