@@ -62,3 +62,21 @@ func TestStoreHero(t *testing.T) {
 
 	shutdown()
 }
+
+func TestIndexHeroes(t *testing.T) {
+	setup()
+
+	req, err := http.NewRequest("GET", "/heroes", nil)
+
+	res := httptest.NewRecorder()
+
+	if err != nil {
+		t.Fatalf(`get all stored heroes: %q`, err)
+	}
+
+	routes.Routes().ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusOK, res.Code, "it should get all stored heroes")
+
+	shutdown()
+}

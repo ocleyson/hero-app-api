@@ -75,3 +75,16 @@ func StoreHero(res http.ResponseWriter, req *http.Request) {
 
 	json.NewEncoder(res).Encode(hero)
 }
+
+func IndexHeroes(res http.ResponseWriter, req *http.Request) {
+	var heroes []models.Hero
+
+	result := services.DB.Find(&heroes)
+
+	if result.Error != nil {
+		http.Error(res, result.Error.Error(), http.StatusBadRequest)
+		return
+	}
+
+	json.NewEncoder(res).Encode(heroes)
+}
