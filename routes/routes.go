@@ -14,12 +14,14 @@ func Routes() http.Handler {
 	var IndexHeroes = controllers.IndexHeroes
 	var IndexGoodHeroes = controllers.IndexGoodHeroes
 	var IndexBadHeroes = controllers.IndexBadHeroes
+	var ShowHero = controllers.ShowHero
 
 	routes.HandleFunc("/search/{name}", SearchHeroByName).Methods("GET")
 	routes.HandleFunc("/heroes", StoreHero).Methods("POST")
 	routes.HandleFunc("/heroes", IndexHeroes).Methods("GET")
 	routes.HandleFunc("/heroes/goods", IndexGoodHeroes).Methods("GET")
 	routes.HandleFunc("/heroes/bads", IndexBadHeroes).Methods("GET")
+	routes.HandleFunc("/heroes/{id}", ShowHero).Methods("GET")
 
 	return routes
 }

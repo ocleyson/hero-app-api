@@ -114,3 +114,18 @@ func IndexBadHeroes(res http.ResponseWriter, req *http.Request) {
 
 	json.NewEncoder(res).Encode(heroes)
 }
+
+func ShowHero(res http.ResponseWriter, req *http.Request) {
+	id := mux.Vars(req)["id"]
+
+	var hero models.Hero
+
+	result := services.DB.First(&hero, id)
+
+	if result.Error != nil {
+		http.Error(res, result.Error.Error(), http.StatusBadRequest)
+		return
+	}
+
+	json.NewEncoder(res).Encode(hero)
+}
