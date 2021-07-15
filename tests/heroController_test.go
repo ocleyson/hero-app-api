@@ -80,3 +80,21 @@ func TestIndexHeroes(t *testing.T) {
 
 	shutdown()
 }
+
+func TestIndexGoodHeroes(t *testing.T) {
+	setup()
+
+	req, err := http.NewRequest("GET", "/heroes/goods", nil)
+
+	res := httptest.NewRecorder()
+
+	if err != nil {
+		t.Fatalf(`get all stored good heroes: %q`, err)
+	}
+
+	routes.Routes().ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusOK, res.Code, "it should get all stored good heroes")
+
+	shutdown()
+}
