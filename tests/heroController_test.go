@@ -126,12 +126,6 @@ func TestIndexBadHeroes(t *testing.T) {
 func TestShowHero(t *testing.T) {
 	setup()
 
-	_, errHero := createHero()
-
-	if errHero != nil {
-		t.Fatalf(`failed to create hero: %q`, errHero)
-	}
-
 	req, err := http.NewRequest("GET", "/heroes/33", nil)
 
 	res := httptest.NewRecorder()

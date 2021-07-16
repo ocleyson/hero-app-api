@@ -126,14 +126,40 @@ func IndexBadHeroes(res http.ResponseWriter, req *http.Request) {
 func ShowHero(res http.ResponseWriter, req *http.Request) {
 	id := mux.Vars(req)["id"]
 
+	var getHeroRes types.GetHeroRes
+
 	var hero models.Hero
 
-	result := services.DB.First(&hero, id)
+	SUPER_HERO_API_KEY := utils.GetEnvVar("SUPER_HERO_API_KEY")
 
-	if result.Error != nil {
-		http.Error(res, result.Error.Error(), http.StatusBadRequest)
+	url := "https://superheroapi.com/api/" + SUPER_HERO_API_KEY + "/" + id
+
+	response, errRes := http.Get(url)
+
+	if errRes != nil {
+		http.Error(res, errRes.Error(), http.StatusBadRequest)
 		return
 	}
+
+	reqBody, errBody := ioutil.ReadAll(response.Body)
+
+	if errBody != nil {
+		http.Error(res, errBody.Error(), http.StatusBadRequest)
+		return
+	}
+
+	json.Unmarshal(reqBody, &getHeroRes)
+
+	hero.Id = getHeroRes.Id
+	hero.Name = getHeroRes.Name
+	hero.FullName = getHeroRes.Biography.FullName
+	hero.Intelligence = getHeroRes.Powerstats.Intelligence
+	hero.Power = getHeroRes.Powerstats.Power
+	hero.Occupation = getHeroRes.Work.Occupation
+	hero.ImageUrl = getHeroRes.Image.Url
+	hero.GroupAffiliation = getHeroRes.Connections.GroupAffiliation
+	hero.Relatives = getHeroRes.Connections.Relatives
+	hero.Alignment = getHeroRes.Biography.Alignment
 
 	json.NewEncoder(res).Encode(hero)
 }
