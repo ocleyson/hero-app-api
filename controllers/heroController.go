@@ -2,10 +2,12 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/jackc/pgconn"
 	"github.com/ocleyson/hero-app-api/models"
 	"github.com/ocleyson/hero-app-api/services"
 	"github.com/ocleyson/hero-app-api/types"
@@ -68,9 +70,15 @@ func StoreHero(res http.ResponseWriter, req *http.Request) {
 
 	result := services.DB.Create(&hero)
 
+	var perr *pgconn.PgError
+
 	if result.Error != nil {
-		http.Error(res, result.Error.Error(), http.StatusBadRequest)
-		return
+		errors.As(result.Error, &perr)
+
+		if perr.Code != "23505" {
+			http.Error(res, result.Error.Error(), http.StatusBadRequest)
+			return
+		}
 	}
 
 	json.NewEncoder(res).Encode(hero)
