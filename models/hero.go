@@ -1,7 +1,7 @@
 package models
 
 type Hero struct {
-	Id               string `json:"id"`
+	Id               string `gorm:"primaryKey" json:"id"`
 	Name             string `json:"name"`
 	FullName         string `json:"fullName"`
 	Intelligence     string `json:"intelligence"`
