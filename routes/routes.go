@@ -9,6 +9,7 @@ import (
 
 func Routes() http.Handler {
 	var routes = mux.NewRouter().StrictSlash(true)
+
 	var SearchHeroByName = controllers.SearchHeroByName
 	var StoreHero = controllers.StoreHero
 	var IndexHeroes = controllers.IndexHeroes
@@ -24,6 +25,8 @@ func Routes() http.Handler {
 	routes.HandleFunc("/heroes/bads", IndexBadHeroes).Methods("GET")
 	routes.HandleFunc("/heroes/{id}", ShowHero).Methods("GET")
 	routes.HandleFunc("/heroes/{id}", DeleteHero).Methods("DELETE")
+
+	routes.Use(mux.CORSMethodMiddleware(routes))
 
 	return routes
 }
