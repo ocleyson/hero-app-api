@@ -146,3 +146,27 @@ func TestShowHero(t *testing.T) {
 
 	shutdown()
 }
+
+func TestDeleteHero(t *testing.T) {
+	setup()
+
+	_, errHero := createHero()
+
+	if errHero != nil {
+		t.Fatalf(`failed to create hero: %q`, errHero)
+	}
+
+	req, err := http.NewRequest("DELETE", "/heroes/33", nil)
+
+	res := httptest.NewRecorder()
+
+	if err != nil {
+		t.Fatalf(`delete hero by id: %q`, err)
+	}
+
+	routes.Routes().ServeHTTP(res, req)
+
+	assert.Equal(t, http.StatusOK, res.Code, "it should delete a hero by its id")
+
+	shutdown()
+}

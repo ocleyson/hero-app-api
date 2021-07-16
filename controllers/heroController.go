@@ -129,3 +129,18 @@ func ShowHero(res http.ResponseWriter, req *http.Request) {
 
 	json.NewEncoder(res).Encode(hero)
 }
+
+func DeleteHero(res http.ResponseWriter, req *http.Request) {
+	id := mux.Vars(req)["id"]
+
+	var hero models.Hero
+
+	result := services.DB.Delete(&hero, id)
+
+	if result.Error != nil {
+		http.Error(res, result.Error.Error(), http.StatusBadRequest)
+		return
+	}
+
+	json.NewEncoder(res).Encode(id)
+}
