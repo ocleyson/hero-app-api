@@ -5,6 +5,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/ocleyson/hero-app-api/controllers"
+	"github.com/rs/cors"
 )
 
 func Routes() http.Handler {
@@ -19,14 +20,18 @@ func Routes() http.Handler {
 	var DeleteHero = controllers.DeleteHero
 
 	routes.HandleFunc("/search/{name}", SearchHeroByName).Methods("GET")
-	routes.HandleFunc("/heroes", StoreHero).Methods("POST")
 	routes.HandleFunc("/heroes", IndexHeroes).Methods("GET")
+	routes.HandleFunc("/heroes", StoreHero).Methods("POST")
 	routes.HandleFunc("/heroes/goods", IndexGoodHeroes).Methods("GET")
 	routes.HandleFunc("/heroes/bads", IndexBadHeroes).Methods("GET")
 	routes.HandleFunc("/heroes/{id}", ShowHero).Methods("GET")
 	routes.HandleFunc("/heroes/{id}", DeleteHero).Methods("DELETE")
 
-	routes.Use(mux.CORSMethodMiddleware(routes))
+	appCors := cors.New(cors.Options{
+		AllowedMethods: []string{"GET", "POST", "DELETE"},
+	})
 
-	return routes
+	handler := appCors.Handler(routes)
+
+	return handler
 }

@@ -15,8 +15,6 @@ import (
 )
 
 func SearchHeroByName(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Access-Control-Allow-Origin", "*")
-
 	name := mux.Vars(req)["name"]
 
 	var searchHeroRes types.SearchHeroesRes
@@ -64,7 +62,6 @@ func SearchHeroByName(res http.ResponseWriter, req *http.Request) {
 }
 
 func StoreHero(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Access-Control-Allow-Origin", "*")
 
 	reqBody, _ := ioutil.ReadAll(req.Body)
 
@@ -89,8 +86,6 @@ func StoreHero(res http.ResponseWriter, req *http.Request) {
 }
 
 func IndexHeroes(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Access-Control-Allow-Origin", "*")
-
 	var heroes []models.Hero
 
 	result := services.DB.Find(&heroes)
@@ -104,8 +99,6 @@ func IndexHeroes(res http.ResponseWriter, req *http.Request) {
 }
 
 func IndexGoodHeroes(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Access-Control-Allow-Origin", "*")
-
 	var heroes []models.Hero
 
 	result := services.DB.Where("alignment = ?", "good").Find(&heroes)
@@ -119,8 +112,6 @@ func IndexGoodHeroes(res http.ResponseWriter, req *http.Request) {
 }
 
 func IndexBadHeroes(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Access-Control-Allow-Origin", "*")
-
 	var heroes []models.Hero
 
 	result := services.DB.Where("alignment = ?", "bad").Find(&heroes)
@@ -134,8 +125,6 @@ func IndexBadHeroes(res http.ResponseWriter, req *http.Request) {
 }
 
 func ShowHero(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Access-Control-Allow-Origin", "*")
-
 	id := mux.Vars(req)["id"]
 
 	var getHeroRes types.GetHeroRes
@@ -177,8 +166,6 @@ func ShowHero(res http.ResponseWriter, req *http.Request) {
 }
 
 func DeleteHero(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Access-Control-Allow-Origin", "*")
-
 	id := mux.Vars(req)["id"]
 
 	var hero models.Hero
